@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en" dir="ltr" data-theme="cloud">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" />
+    <script>
+      // Runs before anything paints, so the page never flashes the wrong theme
+      // or the wrong reading direction. Mirrors src/lib/theme.tsx (theme) and
+      // src/i18n/index.tsx (locale). Keep the three files in step.
+      ;(function () {
+        var root = document.documentElement
+        var theme = 'system'
+        var locale = 'en'
+        try {
+          theme = JSON.parse(localStorage.getItem('puffwork-theme') || '"system"')
+        } catch (e) {}
+        try {
+          locale = JSON.parse(localStorage.getItem('puffwork-locale') || '"en"')
+        } catch (e) {}
+        // `light` / `dark` are the two-theme build's names for Cloud and Velvet.
+        if (theme === 'light') theme = 'cloud'
+        if (theme === 'dark') theme = 'velvet'
+        if (['cloud', 'velvet', 'bloom', 'system'].indexOf(theme) < 0) theme = 'system'
+        if (locale !== 'fa' && locale !== 'en') locale = 'en'
+        // A light OS is Cloud Gallery, a dark one is Velvet Night.
+        var resolved = theme === 'system' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'velvet' : 'cloud') : theme
+        root.setAttribute('data-theme', resolved)
+        root.setAttribute('data-theme-pref', theme)
+        root.style.colorScheme = resolved === 'velvet' ? 'dark' : 'light'
+        // Keep the browser's own chrome (address bar, status bar) on the theme.
+        var themeMeta = document.querySelector('meta[name="theme-color"]')
+        if (themeMeta) themeMeta.setAttribute('content', { cloud: '#ffffff', velvet: '#0d0a13', bloom: '#fdf6ee' }[resolved])
+        root.lang = locale === 'fa' ? 'fa-IR' : 'en'
+        root.dir = locale === 'fa' ? 'rtl' : 'ltr'
+
+        // Warm the one font this visitor will actually read in. Both families
+        // are self-hosted in public/fonts; no font CDN is contacted.
+        var font = document.createElement('link')
+        font.rel = 'preload'
+        font.as = 'font'
+        font.type = 'font/woff2'
+        font.crossOrigin = 'anonymous'
+        font.href = `/puffwork-site/fonts/${locale === 'fa' ? 'estedad-variable' : 'inter-tight-latin'}.woff2`
+        document.head.appendChild(font)
+      })()
+    </script>
+    <meta name="color-scheme" content="light dark" />
+    <title>Puffwork: inflatable abstract 3d illustrations</title>
+    <meta name="description" content="Inflatable abstract 3D illustrations for Figma, Blender and the web. Knit, chrome, velvet and glass objects with simple licences." />
+    <link rel="icon" type="image/svg+xml" href="/puffwork-site/favicon.svg" />
+    <script type="module" crossorigin src="/puffwork-site/assets/index-CexDmBL-.js"></script>
+    <link rel="stylesheet" crossorigin href="/puffwork-site/assets/index-CE-rmxMU.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
